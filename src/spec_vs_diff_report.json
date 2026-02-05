@@ -1,0 +1,95 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-05T17:23:11.768Z",
+  "summary": "The diff implements core routing with an auth gate, Internet Identity integration hooks, task CRUD calls to the backend, analytics computation, streak computation, CSV export, motivational quotes, and references to the required generated images. However, some required behaviors are not evidenced in the provided diff excerpts (notably profile editing after initial setup, and analytics for a user-selected date). There are also unrequested access-control/secret-token initialization mechanics added.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Users can view and edit their profile fields (display name and goal type) after initial setup; changes persist across reloads; scoped to the authenticated Principal.",
+      "reason": "The diff shows a ProfileSetupModal that creates a profile when missing, plus a header display of the profile, but does not show any UI to view/edit the profile later (e.g., in Settings/Profile screen). Backend profile methods are truncated and the frontend only shows creation flow in the visible excerpts.",
+      "evidence": [
+        "frontend/src/components/ProfileSetupModal.tsx",
+        "frontend/src/components/AppHeader.tsx",
+        "backend/main.mo (truncated)",
+        "frontend/src/hooks/useQueries.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "Daily completion percentage for the selected date (not only 'today'), plus weekly/monthly summaries and total completed tasks.",
+      "reason": "The shown analytics hook computes daily completion only for today's date (based on `today = new Date().toISOString().split('T')[0]`) rather than a user-selected date. Weekly/monthly and totals are computed, but the 'selected date' daily metric is not evidenced here.",
+      "evidence": [
+        "frontend/src/hooks/useAnalytics.ts"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Add dark/light mode support with a settings toggle and persist the choice across reloads.",
+      "reason": "A ThemeProvider is added, but there is no evidence in the provided diff excerpts of an actual Settings UI toggle or persistence mechanism (e.g., setting theme via next-themes and storing it). The SettingsPage implementation is not shown.",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Backend access control initialization using a secret URL parameter (`caffeineAdminToken`) and `_initializeAccessControlWithSecret` call.",
+      "reason": "The BuildRequest does not request an admin-secret-based access control system or secret URL parameters; it only requires Internet Identity authentication and per-user scoping.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts",
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "description": "Branding/footer link to caffeine.ai ('Built with ♥ using caffeine.ai').",
+      "reason": "Not requested as part of requirements; could be considered extra/unrequested UI content.",
+      "evidence": [
+        "frontend/src/components/AppLayout.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AnalyticsSummaryCards.tsx",
+    "frontend/src/components/AppHeader.tsx",
+    "frontend/src/components/AppLayout.tsx",
+    "frontend/src/components/AppNav.tsx",
+    "frontend/src/components/AuthGate.tsx",
+    "frontend/src/components/ExportDataCard.tsx",
+    "frontend/src/components/MotivationalQuoteCard.tsx",
+    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/components/StreakWidget.tsx",
+    "frontend/src/components/TaskForm.tsx",
+    "frontend/src/components/TaskList.tsx",
+    "frontend/src/data/quotes.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useAnalytics.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useMotivationalQuote.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useStreak.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/ChartsPage.tsx",
+    "frontend/src/pages/DailyProgressPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/SettingsPage.tsx",
+    "frontend/src/pages/SplashPage.tsx",
+    "frontend/src/pages/TaskEditorPage.tsx",
+    "frontend/src/utils/analytics.ts",
+    "frontend/src/utils/csvExport.ts",
+    "frontend/src/utils/dateRanges.ts",
+    "frontend/src/utils/streaks.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

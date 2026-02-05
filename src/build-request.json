@@ -1,0 +1,236 @@
+{
+  "kind": "build_request",
+  "title": "Daily Progress Tracker: auth, task tracking, analytics, streaks, and settings",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement user authentication using Internet Identity and gate all app features behind login.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "🧾 1. User Management\nSign up / Login"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Unauthenticated users are prompted to sign in with Internet Identity before accessing dashboards or tasks",
+        "After signing in, the UI shows the user as authenticated and can call authenticated backend methods",
+        "Signing out returns the UI to the unauthenticated state"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create user profile data linked to the authenticated Principal, including editable fields: display name and goal type (e.g., Study/Fitness/Coding/Other).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "User profile (name, goal type)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On first login, a profile record is created (or the user is prompted to complete it)",
+        "Users can view and edit their profile fields; changes persist across reloads",
+        "Profile reads/writes are scoped to the currently authenticated Principal"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement task CRUD for the signed-in user: create task with title, date, status (done/pending), optional category, and optional notes; list tasks by selected date; edit and delete tasks.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "📅 2. Daily Task / Goal Tracker\nAdd task (e.g., “Study Python 2 hrs”)\nSelect date\nMark task as Completed / Pending\nEdit / Delete task",
+          "3️⃣ Extra Features (Good for Resume ⭐)\nCategories (Study, Fitness, Coding)\nNotes for each day"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can add a task with a chosen date and see it in the list for that date after saving",
+        "User can toggle a task between done and pending; the change persists after refresh",
+        "User can edit task fields (title/date/category/notes/status) and delete tasks",
+        "All task operations are scoped to the authenticated user (no cross-user access)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Build progress analytics calculations and UI: daily completion percentage for the selected date; weekly summary; monthly summary; and total completed tasks.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "📊 3. Progress Tracking\nDaily completion %\nWeekly summary\nMonthly summary\nTotal completed tasks"
+        ]
+      },
+      "acceptanceCriteria": [
+        "For a selected date, the app displays completion % = done tasks / total tasks for that date (handle 0 tasks gracefully)",
+        "Weekly and monthly summaries are computed from the user’s tasks and displayed in the UI",
+        "A total completed tasks metric is displayed and matches the underlying task data"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement a streak system: current daily streak count, best streak record, and logic to break a streak when a day is missed (based on days with 100% completion or at least one completed task—choose one rule and apply consistently).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "🔥 4. Streak System\nDaily streak count\nBreak streak if day missed\nBest streak record"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The dashboard shows current streak and best streak values",
+        "Streak values update when tasks are completed/uncompleted and after date changes",
+        "The chosen streak rule is clearly described in the UI (English), and computations follow that rule consistently"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Create the required screens/routes with a user-friendly flow: Splash (or landing), Login/Register (Internet Identity sign-in), Home Dashboard, Add/Edit Task, Daily Progress view, Weekly/Monthly charts view, Profile/Settings.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "6️⃣ App Screens (UI Pages)\nSplash Screen\nLogin / Register\nHome Dashboard\nAdd Task Screen\nDaily Progress View\nWeekly / Monthly Chart\nProfile / Settings"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can navigate between the listed screens without broken routes",
+        "The dashboard provides clear entry points to add tasks, change date, and view analytics",
+        "All user-facing text is in English"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add dark/light mode support with a settings toggle and ensure the UI remains readable and consistent in both modes.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "3️⃣ Extra Features (Good for Resume ⭐)\nDark / Light mode"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can toggle between light and dark mode in Settings",
+        "Theme choice persists across reloads (e.g., localStorage)",
+        "Core pages are usable and accessible in both themes"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement export of the user’s task/progress data as a CSV download from the UI.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Export progress (PDF / CSV)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can export to CSV from a clear UI action (e.g., Settings)",
+        "Downloaded CSV includes at least: date, title, status, category, notes",
+        "Export uses only the signed-in user’s data"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Add a simple motivational quotes feature: display an English quote on the dashboard (e.g., daily random from a built-in list) with an option to refresh.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Motivational quotes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard shows a motivational quote in English",
+        "User can refresh to get another quote",
+        "Quotes work offline (no external API required)"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Apply a coherent visual theme across the app (color palette, typography, spacing, and component styling) optimized for a clear, friendly productivity feel; avoid blue/purple as primary colors.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Build progress daily tracker user friendly clear design app build"
+        ]
+      },
+      "acceptanceCriteria": [
+        "UI uses a consistent design system (colors/typography/layout) across all screens",
+        "Primary styling does not rely on blue/purple as the main brand colors",
+        "The dashboard and task list are visually scannable (clear hierarchy, spacing, and states)"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Render any generated static images (from imageRequirements.required) from frontend/public/assets/generated and use them in the UI (e.g., app logo in header/auth screens and an empty-state illustration when there are no tasks).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Build progress daily tracker user friendly clear design app build"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images are placed under frontend/public/assets/generated and referenced directly by the frontend",
+        "At least one generated image is visible in the running app UI",
+        "No backend routing is used for serving these images"
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must be a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit files under frontend/src/components/ui or other immutablePaths; compose them from app code instead.",
+    "Use English for all user-facing text.",
+    "Third-party auth methods like Google OAuth and email/password are not used; authentication must use Internet Identity."
+  ],
+  "nonGoals": [
+    "Mobile-native push notifications/reminders (no OS-level notifications).",
+    "Firebase/Firestore, Node/Express, Django, or any external database integration.",
+    "Real-time features (WebSockets) or chat.",
+    "Payments/monetization features."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimal productivity app logo mark, warm neutral palette, flat vector style (daily-progress-logo.dim_512x512.png)",
+      "Simple empty-state illustration of a checklist and calendar on a desk, flat vector style (empty-tasks-illustration.dim_1200x800.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Daily Progress Tracker (Frontend): Internet Identity auth, task tracking, analytics, streaks, settings",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Gate all app features behind Internet Identity login; support logout and authenticated actor usage.",
+      "acceptanceCriteria": [
+        "Unauthenticated users are prompted to sign in with Internet Identity before accessing dashboards or tasks",
+        "After signing in, the UI shows the user as authenticated and can call authenticated backend methods",
+        "Signing out returns the UI to the unauthenticated state"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell and route wiring that gates all protected screens behind authentication (using existing Internet Identity hook/provider). Include logout handling that clears cached data. Use the selected authorization component patterns for login/logout and cache clearing. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AuthGate.tsx",
+          "operation": "create",
+          "description": "Add an auth gate wrapper that blocks access to protected routes/screens when the user is not authenticated and redirects to the Login screen. Use the selected authorization component guidance for showing an access/unauthenticated screen and for clearing cached data on logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "create",
+          "description": "Implement the Login/Register (Internet Identity) screen with a clear sign-in action and a sign-out action when already authenticated. Use the selected authorization component guidance for Internet Identity login/logout UI behavior. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "create",
+          "description": "Add a header that displays authenticated state (e.g., profile name when available) and provides a logout control. Use the selected authorization component guidance for authenticated UI state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "create",
+          "description": "Add a small convenience hook that derives isAuthenticated and current Principal from the existing Internet Identity context and centralizes logout-side cache clearing. Use the selected authorization component guidance for clearing cached application data on logout. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create/view/edit a per-user profile (display name and goal type) linked to the authenticated Principal.",
+      "acceptanceCriteria": [
+        "On first login, a profile record is created (or the user is prompted to complete it)",
+        "Users can view and edit their profile fields; changes persist across reloads",
+        "Profile reads/writes are scoped to the currently authenticated Principal"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Implement React Query hooks to load and save the current user's profile via backend functions, including loading states that prevent profile-setup modal flash. Use the selected authorization component guidance for getCallerUserProfile/saveCallerUserProfile patterns. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetupModal.tsx",
+          "operation": "create",
+          "description": "Create a modal/dialog that prompts first-time logged-in users to set display name and goal type, and saves it. Use the selected authorization component guidance for first-login profile setup UX and avoiding principal display. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SettingsPage.tsx",
+          "operation": "create",
+          "description": "Implement Profile/Settings screen UI to view/edit display name and goal type and persist changes via the profile hooks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the profile setup prompt into the authenticated flow so first-time users are prompted after login (without flashing) and can continue to protected screens after saving. Use the selected authorization component guidance for profile setup flow. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Implement signed-in user task create/list/edit/delete UI with date filtering and persistence via backend calls.",
+      "acceptanceCriteria": [
+        "User can add a task with a chosen date and see it in the list for that date after saving",
+        "User can toggle a task between done and pending; the change persists after refresh",
+        "User can edit task fields (title/date/category/notes/status) and delete tasks",
+        "All task operations are scoped to the authenticated user (no cross-user access)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useTasks.ts",
+          "operation": "create",
+          "description": "Create React Query hooks to fetch tasks for a selected date and perform create/edit/delete/toggle operations via backend calls; ensure queries are invalidated/refetched after mutations and only run when authenticated/actor is available. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "create",
+          "description": "Build the Home Dashboard screen with a date picker/selector, task list for the selected date, and actions to add/edit/delete/toggle tasks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/TaskEditorPage.tsx",
+          "operation": "create",
+          "description": "Implement Add/Edit Task screen that supports title, date, status, optional category, optional notes; supports both create and edit flows based on navigation state/params. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/TaskList.tsx",
+          "operation": "create",
+          "description": "Create a reusable task list component with clear done/pending states, inline toggle, and edit/delete actions; render an empty-state when there are no tasks for the selected date. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/TaskForm.tsx",
+          "operation": "create",
+          "description": "Create a form component used by the task editor page for creating/updating tasks (title/date/status/category/notes). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register routes/navigation to Dashboard and Add/Edit Task screens and ensure they are behind the auth gate. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Compute and display progress analytics: daily completion %, weekly/monthly summaries, and total completed tasks.",
+      "acceptanceCriteria": [
+        "For a selected date, the app displays completion % = done tasks / total tasks for that date (handle 0 tasks gracefully)",
+        "Weekly and monthly summaries are computed from the user’s tasks and displayed in the UI",
+        "A total completed tasks metric is displayed and matches the underlying task data"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/dateRanges.ts",
+          "operation": "create",
+          "description": "Add date range helpers (day/week/month boundaries, iteration across days, formatting) used for analytics queries and UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/utils/analytics.ts",
+          "operation": "create",
+          "description": "Implement pure functions to compute daily completion %, weekly/monthly aggregates, and total completed tasks from task lists; handle empty sets gracefully. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DailyProgressPage.tsx",
+          "operation": "create",
+          "description": "Implement the Daily Progress view showing the selected date’s completion %, totals, and a breakdown of done vs pending tasks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ChartsPage.tsx",
+          "operation": "create",
+          "description": "Implement Weekly/Monthly charts view that fetches tasks across the relevant date ranges (by querying each day as needed) and displays weekly and monthly summaries plus total completed tasks. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AnalyticsSummaryCards.tsx",
+          "operation": "create",
+          "description": "Create summary UI components for daily/weekly/monthly/total metrics with clear hierarchy and readable states. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire routes/navigation from the dashboard to Daily Progress and Weekly/Monthly charts screens. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Show current and best streak, and compute streak updates consistently with a clearly described rule.",
+      "acceptanceCriteria": [
+        "The dashboard shows current streak and best streak values",
+        "Streak values update when tasks are completed/uncompleted and after date changes",
+        "The chosen streak rule is clearly described in the UI (English), and computations follow that rule consistently"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/streaks.ts",
+          "operation": "create",
+          "description": "Implement streak computation utilities from tasks over time using a single consistent rule: a day counts toward the streak if the user completes at least one task on that date; streak breaks when a day is missed. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useStreak.ts",
+          "operation": "create",
+          "description": "Create a hook that derives current streak and best streak from available task history (querying tasks across a rolling window as needed) and exposes a short English description of the applied rule for UI display. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/StreakWidget.tsx",
+          "operation": "create",
+          "description": "Add a dashboard widget that shows current streak, best streak, and the English explanation of the streak rule. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Integrate the streak widget into the dashboard and ensure it updates when selected date changes and when tasks are toggled/edited. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Create required screens/routes and ensure a user-friendly navigation flow across them.",
+      "acceptanceCriteria": [
+        "Users can navigate between the listed screens without broken routes",
+        "The dashboard provides clear entry points to add tasks, change date, and view analytics",
+        "All user-facing text is in English"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SplashPage.tsx",
+          "operation": "create",
+          "description": "Implement Splash/Landing screen with clear call-to-action to sign in and brief app description in English. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppNav.tsx",
+          "operation": "create",
+          "description": "Create a simple navigation component (links/buttons) for Dashboard, Add Task, Daily Progress, Charts, and Settings; ensure protected navigation only renders when authenticated. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route table and route wiring for: Splash, Login, Home Dashboard, Add/Edit Task, Daily Progress, Weekly/Monthly charts, Profile/Settings; ensure protected routes are wrapped by the auth gate and navigation is not broken. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppLayout.tsx",
+          "operation": "create",
+          "description": "Create a shared layout (header + nav + main container) used by authenticated screens to provide consistent structure and clear entry points. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add dark/light mode toggle in Settings with persistence across reloads.",
+      "acceptanceCriteria": [
+        "User can toggle between light and dark mode in Settings",
+        "Theme choice persists across reloads (e.g., localStorage)",
+        "Core pages are usable and accessible in both themes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useTheme.ts",
+          "operation": "create",
+          "description": "Implement theme state (light/dark) persisted to localStorage and applied via a class on the document element for Tailwind dark mode. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SettingsPage.tsx",
+          "operation": "modify",
+          "description": "Add a dark/light mode toggle control, using the theme hook, and ensure text remains English. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global styles and CSS variables for a readable light/dark theme foundation (compatible with Tailwind darkMode: class). Ensure defaults are legible and consistent across pages. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Initialize/apply persisted theme on app load and ensure layout components render correctly in both themes. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Export the signed-in user’s task/progress data as a CSV download from the UI.",
+      "acceptanceCriteria": [
+        "User can export to CSV from a clear UI action (e.g., Settings)",
+        "Downloaded CSV includes at least: date, title, status, category, notes",
+        "Export uses only the signed-in user’s data"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/csvExport.ts",
+          "operation": "create",
+          "description": "Implement CSV generation and download utilities (escaping, headers) for tasks including at least date, title, status, category, notes. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ExportDataCard.tsx",
+          "operation": "create",
+          "description": "Create a Settings panel section that triggers CSV export and shows a small description of what will be exported; fetch only the signed-in user’s data via existing task queries (iterating dates over a user-selected range). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SettingsPage.tsx",
+          "operation": "modify",
+          "description": "Add the CSV export UI action to Settings, including a simple date-range chooser (e.g., start/end) to bound the export when aggregating tasks by day. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Show a motivational English quote on the dashboard with an offline refresh option.",
+      "acceptanceCriteria": [
+        "Dashboard shows a motivational quote in English",
+        "User can refresh to get another quote",
+        "Quotes work offline (no external API required)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/data/quotes.ts",
+          "operation": "create",
+          "description": "Add a built-in list of English motivational quotes for offline use. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useMotivationalQuote.ts",
+          "operation": "create",
+          "description": "Implement a hook that selects a random quote from the built-in list and supports refresh without external network calls. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/MotivationalQuoteCard.tsx",
+          "operation": "create",
+          "description": "Create a dashboard card component that displays the current quote and a refresh control. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Place the motivational quote card on the dashboard and ensure it remains readable in light/dark themes. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Apply a cohesive friendly productivity theme across the app (avoid blue/purple as primary).",
+      "acceptanceCriteria": [
+        "UI uses a consistent design system (colors/typography/layout) across all screens",
+        "Primary styling does not rely on blue/purple as the main brand colors",
+        "The dashboard and task list are visually scannable (clear hierarchy, spacing, and states)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Define/adjust global CSS variables and base styles to establish a warm neutral palette and consistent typography/spacing; ensure primary/accent colors are not blue/purple. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust theme tokens (e.g., chart colors and any custom palette variables) to match the warm neutral productivity theme and support both light/dark modes without blue/purple as primary. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Ensure consistent layout spacing, card styling, and scannable hierarchy across screens (dashboard/task list/analytics/settings) using composed UI components (do not edit immutable ui component files). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/TaskList.tsx",
+          "operation": "modify",
+          "description": "Refine task list visual hierarchy and states (done/pending, hover/focus, empty state) to be easily scannable and consistent with the theme. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Render the generated static images from frontend/public/assets/generated in the UI (logo + empty-state illustration).",
+      "acceptanceCriteria": [
+        "Generated images are placed under frontend/public/assets/generated and referenced directly by the frontend",
+        "At least one generated image is visible in the running app UI",
+        "No backend routing is used for serving these images"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/daily-progress-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated logo asset at this exact path so the frontend can reference it as a static file."
+        },
+        {
+          "path": "frontend/public/assets/generated/empty-tasks-illustration.dim_1200x800.png",
+          "operation": "create",
+          "description": "Add the generated empty-state illustration asset at this exact path so the frontend can reference it as a static file."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Reference and render the static logo image from frontend/public/assets/generated/daily-progress-logo.dim_512x512.png in the header and/or auth screens. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/TaskList.tsx",
+          "operation": "modify",
+          "description": "Render an empty-state illustration when there are no tasks for the selected date, referencing frontend/public/assets/generated/empty-tasks-illustration.dim_1200x800.png directly. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SplashPage.tsx",
+          "operation": "modify",
+          "description": "Use the static logo image from frontend/public/assets/generated/daily-progress-logo.dim_512x512.png on the splash/landing screen for branding consistency. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

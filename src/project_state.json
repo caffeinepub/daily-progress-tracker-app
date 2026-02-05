@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Daily Progress Tracker App for tracking daily goals/tasks, progress analytics (daily/weekly/monthly), streaks, and optional reminders; includes authentication, task CRUD, dashboards/charts, and settings.",
+  "architectural_notes": [
+    "Suggested stack: Flutter or React Native frontend with Firebase backend (Firestore).",
+    "Data model concept: users collection (name, email, createdAt) and tasks collection (userId, title, date, status, category)."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Minimal productivity app logo mark, warm neutral palette, flat vector style (daily-progress-logo.dim_512x512.png)\n- Simple empty-state illustration of a checklist and calendar on a desk, flat vector style (empty-tasks-illustration.dim_1200x800.png)",
+  "existing_features": [
+    {
+      "id": "feature-implement-user-authentication-using-internet-identity-and-gate-all-app-features-behind-login",
+      "title": "Implement user authentication using Internet Identity and gate all app features behind login.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-user-profile-data-linked-to-the-authenticated-principal-including-editable-fields-display-name-and-goal-type-e-g-study-fitness-coding-other",
+      "title": "Create user profile data linked to the authenticated Principal, including editable fields: display name and goal type (e.g., Study/Fitness/Coding/Other).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-task-crud-for-the-signed-in-user-create-task-with-title-date-status-done-pending-optional-category-and-optional-notes-list-tasks-by-selected-date-edit-and-delete-tasks",
+      "title": "Implement task CRUD for the signed-in user: create task with title, date, status (done/pending), optional category, and optional notes; list tasks by selected date; edit and delete tasks.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-progress-analytics-calculations-and-ui-daily-completion-percentage-for-the-selected-date-weekly-summary-monthly-summary-and-total-completed-tasks",
+      "title": "Build progress analytics calculations and UI: daily completion percentage for the selected date; weekly summary; monthly summary; and total completed tasks.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-streak-system-current-daily-streak-count-best-streak-record-and-logic-to-break-a-streak-when-a-day-is-missed-based-on-days-with-100-completion-or-at-least-one-completed-task-choose-one-rule-and-apply-consistently",
+      "title": "Implement a streak system: current daily streak count, best streak record, and logic to break a streak when a day is missed (based on days with 100% completion or at least one completed task—choose one rule and apply consistently).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-required-screens-routes-with-a-user-friendly-flow-splash-or-landing-login-register-internet-identity-sign-in-home-dashboard-add-edit-task-daily-progress-view-weekly-monthly-charts-view-profile-settings",
+      "title": "Create the required screens/routes with a user-friendly flow: Splash (or landing), Login/Register (Internet Identity sign-in), Home Dashboard, Add/Edit Task, Daily Progress view, Weekly/Monthly charts view, Profile/Settings.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-dark-light-mode-support-with-a-settings-toggle-and-ensure-the-ui-remains-readable-and-consistent-in-both-modes",
+      "title": "Add dark/light mode support with a settings toggle and ensure the UI remains readable and consistent in both modes.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-export-of-the-user-s-task-progress-data-as-a-csv-download-from-the-ui",
+      "title": "Implement export of the user’s task/progress data as a CSV download from the UI.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-simple-motivational-quotes-feature-display-an-english-quote-on-the-dashboard-e-g-daily-random-from-a-built-in-list-with-an-option-to-refresh",
+      "title": "Add a simple motivational quotes feature: display an English quote on the dashboard (e.g., daily random from a built-in list) with an option to refresh.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-visual-theme-across-the-app-color-palette-typography-spacing-and-component-styling-optimized-for-a-clear-friendly-productivity-feel-avoid-blue-purple-as-primary-colors",
+      "title": "Apply a coherent visual theme across the app (color palette, typography, spacing, and component styling) optimized for a clear, friendly productivity feel; avoid blue/purple as primary colors.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-any-generated-static-images-from-imagerequirements-required-from-frontend-public-assets-generated-and-use-them-in-the-ui-e-g-app-logo-in-header-auth-screens-and-an-empty-state-illustration-when-there-are-no-tasks",
+      "title": "Render any generated static images (from imageRequirements.required) from frontend/public/assets/generated and use them in the UI (e.g., app logo in header/auth screens and an empty-state illustration when there are no tasks).",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "User management: sign up/login (email+password and/or Google), user profile (name, goal type)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Daily task/goal tracker: add task with date, mark done/pending, edit/delete tasks",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Progress tracking analytics: daily completion %, weekly/monthly summaries, total completed tasks",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Streak system: current streak, best streak, break streak when a day is missed",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Optional reminders: daily notification reminders with custom time setting",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "UI/screens: splash, auth (login/register), home dashboard, add task, daily progress view, weekly/monthly charts, profile/settings",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Extra/resume features: dark/light mode, categories, notes per day, export progress (PDF/CSV), motivational quotes",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Daily Progress Tracker App",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
